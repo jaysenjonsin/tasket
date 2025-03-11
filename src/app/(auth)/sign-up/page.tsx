@@ -1,9 +1,11 @@
-import React from 'react';
+'use client';
+
+import { SignUpCard } from '@/features/auth/components/sign-up-card';
 
 type Props = {};
 
 const SignUp = (props: Props) => {
-  return <div>Sign up page</div>;
+  return <SignUpCard />;
 };
 
 export default SignUp;
