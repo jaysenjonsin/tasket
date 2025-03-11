@@ -17,7 +17,6 @@ export const SignUpCard = () => {
       <CardHeader className='flex items-center justify-center text-center p-7'>
         <CardTitle className='text-2xl'>Sign up</CardTitle>
         <CardDescription>
-          {' '}
           By signing up, you agree to our{' '}
           <Link href='/privacy'>
             <span className='text-blue-700'>Privacy Policy </span>
@@ -35,11 +34,11 @@ export const SignUpCard = () => {
         <form className='space-y-4'>
           <Input
             required
-            type='email'
+            type='text'
             value=''
             onChange={() => {}}
             disabled={false}
-            placeholder='Enter your email'
+            placeholder='Enter your name'
           />
           <Input
             required
