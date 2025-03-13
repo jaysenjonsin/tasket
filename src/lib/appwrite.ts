@@ -1,3 +1,5 @@
+import 'server-only'; //this file is only used on the server - using npm package server-only to ensure that the file is only used on the server
+
 import { Account, Client, Databases, Storage, Users } from 'node-appwrite';
 
 //admin client: used for admin actions like creating a new account
