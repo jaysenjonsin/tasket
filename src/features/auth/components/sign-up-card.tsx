@@ -25,9 +25,7 @@ import { registerSchema } from '../../schemas';
 import { useRegister } from '../api/use-register';
 export const SignUpCard = () => {
   const { mutate } = useRegister();
-  const onSubmit = (values: z.infer<typeof registerSchema>) => {
-    mutate({ json: values });
-  };
+
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -36,6 +34,10 @@ export const SignUpCard = () => {
       password: '',
     },
   });
+
+  const onSubmit = (values: z.infer<typeof registerSchema>) => {
+    mutate({ json: values });
+  };
   return (
     <Card className='w-full h-full md:w-[487px] border-none shadow-none'>
       <CardHeader className='flex items-center justify-center text-center p-7'>
@@ -107,7 +109,7 @@ export const SignUpCard = () => {
               )}
             />
             <Button disabled={false} size='lg' className='w-full'>
-              Log in
+              Sign up
             </Button>
           </form>
         </Form>

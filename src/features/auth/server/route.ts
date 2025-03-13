@@ -12,9 +12,9 @@ const app = new Hono()
     return c.json({ email, password });
   })
   .post('/register', zValidator('json', registerSchema), async (c) => {
-    const { email, password } = c.req.valid('json');
-    console.log({ email, password });
-    return c.json({ email, password });
+    const { name, email, password } = c.req.valid('json');
+    console.log({ name,email, password });
+    return c.json({ name, email, password });
   });
 //zValidator is a middleware that validates the request body against the schema for type safety
 
