@@ -1,10 +1,10 @@
-'use client';
-
 import { SignUpCard } from '@/features/auth/components/sign-up-card';
+import { getCurrent } from '@/features/auth/actions';
+import { redirect } from 'next/navigation';
 
-type Props = {};
-
-const SignUp = (props: Props) => {
+const SignUp = async () => {
+  const user = await getCurrent();
+  if (user) redirect('/');
   return <SignUpCard />;
 };
 
