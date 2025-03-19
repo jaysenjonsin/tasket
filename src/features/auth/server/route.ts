@@ -9,6 +9,10 @@ import { sessionMiddleware } from '../../../lib/session-middleware';
 
 //AuthRouter
 const app = new Hono()
+  .get('/current', sessionMiddleware, (c) => {
+    const user = c.get('user');
+    return c.json({ data: user });
+  }) 
   .post('/login', zValidator('json', loginSchema), async (c) => {
     //zValidator is a middleware that validates the request body against the schema for type safety
     //c is a context object that contains the request and response

@@ -24,6 +24,7 @@ type AdditionalContext = {
   };
 };
 
+//this middleware is used to set the session for the current user(appwrite doesnt have a custom middleware with hono)
 export const sessionMiddleware = createMiddleware<AdditionalContext>(
   async (c, next) => {
     const client = new Client()
