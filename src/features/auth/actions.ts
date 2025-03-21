@@ -10,10 +10,11 @@ export const getCurrent = async () => {
       .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
       .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);
 
-      //see if a user is logged in by checking if session exists
+    //see if a user is logged in by checking if session exists
     const session = await cookies().get(AUTH_COOKIE);
     if (!session) return null;
-
+    
+    client.setSession(session.value);
     const account = new Account(client);
 
     return await account.get();

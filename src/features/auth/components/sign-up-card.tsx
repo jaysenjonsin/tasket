@@ -26,7 +26,7 @@ import { useForm } from 'react-hook-form';
 import { registerSchema } from '../../schemas';
 import { useRegister } from '../api/use-register';
 export const SignUpCard = () => {
-  const { mutate } = useRegister();
+  const { mutate, isPending } = useRegister();
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -110,7 +110,7 @@ export const SignUpCard = () => {
                 </FormItem>
               )}
             />
-            <Button disabled={false} size='lg' className='w-full'>
+            <Button disabled={isPending} size='lg' className='w-full'>
               Sign up
             </Button>
           </form>
@@ -123,7 +123,7 @@ export const SignUpCard = () => {
         <Button
           variant='secondary'
           size='lg'
-          disabled={false}
+          disabled={isPending}
           className='w-full'
         >
           <FcGoogle className='size-5 mr-2' />
@@ -132,7 +132,7 @@ export const SignUpCard = () => {
         <Button
           variant='secondary'
           size='lg'
-          disabled={false}
+          disabled={isPending}
           className='w-full'
         >
           <FaGithub className='size-5 mr-2' />
