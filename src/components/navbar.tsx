@@ -1,4 +1,5 @@
 import { UserButton } from '@/features/auth/components/user-button';
+import { MobileSidebar } from './mobile-sidebar';
 
 export const Navbar = () => (
   <nav className='pt-4 px-6 flex items-center justify-between'>
@@ -8,6 +9,7 @@ export const Navbar = () => (
         Monitor all of your projects an tasks here
       </p>
     </div>
+    <MobileSidebar />
     <UserButton />
   </nav>
 );
