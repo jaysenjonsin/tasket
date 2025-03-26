@@ -11,7 +11,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <div className='fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-y-auto'>
           <Sidebar />
         </div>
-        {/*padding to account for fixed sidebar */}
+        {/*padding on lg to account for fixed sidebar */}
         <div className='lg:pl-[264px] w-full'>
           <div className='mx-auto max-w-screen-2xl h-full'>
             <Navbar />

@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { loginSchema, registerSchema } from '@/features/schemas';
+import { loginSchema, registerSchema } from '@/features/auth/schemas';
 import { createAdminClient } from '@/lib/appwrite';
 import { setCookie, deleteCookie } from 'hono/cookie';
 import { ID } from 'node-appwrite'; //ID is a unique identifier for the user made by appwrite

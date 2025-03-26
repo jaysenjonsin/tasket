@@ -17,7 +17,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { loginSchema } from '../../schemas';
+import { loginSchema } from '../schemas';
 import { useLogin } from '../api/use-login';
 
 export const SignInCard = () => {

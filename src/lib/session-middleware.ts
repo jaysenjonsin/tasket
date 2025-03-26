@@ -14,6 +14,7 @@ import {
   type Users as UsersType,
 } from 'node-appwrite';
 
+//in docs: Create Variables: {yourvariables} for type safety
 type AdditionalContext = {
   Variables: {
     account: AccountType;

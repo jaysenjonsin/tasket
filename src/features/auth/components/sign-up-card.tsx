@@ -23,7 +23,7 @@ import {
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { registerSchema } from '../../schemas';
+import { registerSchema } from '../schemas';
 import { useRegister } from '../api/use-register';
 export const SignUpCard = () => {
   const { mutate, isPending } = useRegister();
