@@ -24,6 +24,7 @@ export const useLogout = () => {
       router.refresh();
       //invalidate the current query when successfully logged out. when user logs out, forces refetch of querykey 'current',
       queryClient.invalidateQueries({ queryKey: ['current'] });
+      queryClient.invalidateQueries({ queryKey: ['workspaces'] });
     },
     onError: () => {
       toast.error('Failed to log out');
