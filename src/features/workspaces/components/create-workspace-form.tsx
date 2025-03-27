@@ -156,7 +156,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                 Cancel
               </Button>
               <Button
-                // type='submit' <-- default submit now
+                // type='submit' <-- default submit so its unnecessary to specify
                 size='lg'
                 disabled={isPending}
               >
