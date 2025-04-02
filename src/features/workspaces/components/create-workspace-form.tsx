@@ -20,12 +20,15 @@ import {
 } from '@/components/ui/form';
 import { DottedSeperator } from '@/components/dotted-seperator';
 import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
+import { cn } from '../../../lib/utils';
 interface CreateWorkspaceFormProps {
   onCancel?: () => void;
 }
 
 export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
   const { mutate, isPending } = useCreateWorkspace();
+  const router = useRouter();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -44,10 +47,11 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
     mutate(
       { form: finalValues },
       {
-        onSuccess: () => {
+        onSuccess: ({ data }) => {
           form.reset();
+          //after the workspace is created, redirect to the workspace immediately
+          router.push(`/workspaces/${data.$id}`);
         },
-        //later: Redirect to the new workspace
       }
     );
   };
@@ -152,6 +156,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                 variant='secondary'
                 onClick={onCancel}
                 disabled={isPending}
+                className={cn(!onCancel && 'invisible')}
               >
                 Cancel
               </Button>

@@ -1,5 +1,5 @@
 import { useQueryState, parseAsBoolean } from 'nuqs';
-
+//this hook is used to open and close the create workspace modal
 export const useCreateWorkSpaceModal = () => {
   const [isOpen, setIsOpen] = useQueryState(
     'create-workspace',
