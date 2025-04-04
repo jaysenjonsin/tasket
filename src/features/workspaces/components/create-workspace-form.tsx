@@ -130,17 +130,36 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                           onChange={handleImageChange}
                           disabled={isPending}
                         />
-                        <Button
-                          type='button'
-                          disabled={isPending}
-                          variant='tertiary'
-                          size='xs'
-                          className='w-fit mt-2'
-                          //trigger the hidden input field above
-                          onClick={() => inputRef.current?.click()}
-                        >
-                          Upload Image
-                        </Button>
+                        {field.value ? (
+                          <Button
+                            type='button'
+                            disabled={isPending}
+                            variant='destructive'
+                            size='xs'
+                            className='w-fit mt-2'
+                            //trigger the hidden input field above
+                            onClick={() => {
+                              field.onChange(null);
+                              if (inputRef.current) {
+                                inputRef.current.value = '';
+                              }
+                            }}
+                          >
+                            Remove image
+                          </Button>
+                        ) : (
+                          <Button
+                            type='button'
+                            disabled={isPending}
+                            variant='tertiary'
+                            size='xs'
+                            className='w-fit mt-2'
+                            //trigger the hidden input field above
+                            onClick={() => inputRef.current?.click()}
+                          >
+                            Upload Image
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>
