@@ -27,7 +27,7 @@ export const useUpdateWorkspace = () => {
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      toast.success('Workspace Upddated');
+      toast.success('Workspace Updated');
       queryClient.invalidateQueries({ queryKey: ['workspaces'] });
       queryClient.invalidateQueries({ queryKey: ['workspace', data.$id] });
     },
