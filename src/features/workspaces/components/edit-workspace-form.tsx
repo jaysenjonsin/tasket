@@ -157,7 +157,9 @@ export const EditWorkspaceForm = ({
                             className='w-fit mt-2'
                             //trigger the hidden input field above
                             onClick={() => {
+                              //remove the image from the form state
                               field.onChange(null);
+                              //actually remove the image from the input field
                               if (inputRef.current) {
                                 inputRef.current.value = '';
                               }
