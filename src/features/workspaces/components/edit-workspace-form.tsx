@@ -23,6 +23,8 @@ import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { cn } from '../../../lib/utils';
 import { Workspace } from '../types';
+import { useConfirm } from '@/hooks/use-confirm';
+import { useDeleteWorkspace } from '../api/use-delete-workspace';
 interface EditWorkspaceFormProps {
   onCancel?: () => void;
   initialValues: Workspace;
@@ -32,8 +34,16 @@ export const EditWorkspaceForm = ({
   onCancel,
   initialValues,
 }: EditWorkspaceFormProps) => {
-  const { mutate, isPending } = useUpdateWorkspace();
   const router = useRouter();
+  const { mutate, isPending } = useUpdateWorkspace();
+  const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } =
+    useDeleteWorkspace();
+
+  const [DeleteDiaolog, confirmDelete] = useConfirm(
+    'Delete Workspace',
+    'This action cannot be undone',
+    'destructive'
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -62,6 +72,22 @@ export const EditWorkspaceForm = ({
     );
   };
 
+  const handleDelete = async () => {
+    const ok = await confirmDelete();
+    if (!ok) return;
+
+    deleteWorkspace(
+      {
+        param: { workspaceId: initialValues.$id },
+      },
+      {
+        onSuccess: () => {
+          router.push('/');
+        },
+      }
+    );
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -71,6 +97,7 @@ export const EditWorkspaceForm = ({
 
   return (
     <div className='flex flex-col gap-y-4'>
+      <DeleteDiaolog />
       <Card className='w-full h-full border-none shadow-none'>
         <CardHeader className='flex flex-row items-center gap-x-4 p-7 space-y-0'>
           <Button
@@ -229,7 +256,7 @@ export const EditWorkspaceForm = ({
               variant='destructive'
               type='button'
               disabled={isPending}
-              onClick={() => {}}
+              onClick={handleDelete}
             >
               Delete Workspace
             </Button>
