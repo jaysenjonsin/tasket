@@ -221,8 +221,18 @@ export const EditWorkspaceForm = ({
             <h3 className='font-bold'>Danger zone</h3>
             <p className='text-sm text-muted-foreground'>
               Deleting a workspace is irreversible and will remove all
-              associated data 
+              associated data
             </p>
+            <Button
+              className='mt-6 w-fit ml-auto'
+              size='sm'
+              variant='destructive'
+              type='button'
+              disabled={isPending}
+              onClick={() => {}}
+            >
+              Delete Workspace
+            </Button>
           </div>
         </CardContent>
       </Card>
