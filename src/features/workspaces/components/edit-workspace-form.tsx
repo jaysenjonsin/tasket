@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { ArrowLeftIcon, ImageIcon } from 'lucide-react';
+import { ArrowLeftIcon, CopyIcon, ImageIcon } from 'lucide-react';
 import { updateWorkspaceSchema } from '../schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -25,6 +25,7 @@ import { cn } from '../../../lib/utils';
 import { Workspace } from '../types';
 import { useConfirm } from '@/hooks/use-confirm';
 import { useDeleteWorkspace } from '../api/use-delete-workspace';
+import { toast } from 'sonner';
 interface EditWorkspaceFormProps {
   onCancel?: () => void;
   initialValues: Workspace;
@@ -73,6 +74,7 @@ export const EditWorkspaceForm = ({
   };
 
   const handleDelete = async () => {
+    //press cancel button: returns false, press confirm button: returns true
     const ok = await confirmDelete();
     if (!ok) return;
 
@@ -82,7 +84,9 @@ export const EditWorkspaceForm = ({
       },
       {
         onSuccess: () => {
-          router.push('/');
+          // router.push('/');
+          //hard reload to page
+          window.location.href = '/';
         },
       }
     );
@@ -95,8 +99,17 @@ export const EditWorkspaceForm = ({
     }
   };
 
+  const fullInviteLink = `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`;
+
+  const handleCopyInviteLink = () => {
+    navigator.clipboard
+      .writeText(fullInviteLink)
+      .then(() => toast.success('Invite link copied to clipboard'));
+  };
+
   return (
     <div className='flex flex-col gap-y-4'>
+      {/* this is only open when the delete button is clicked */}
       <DeleteDiaolog />
       <Card className='w-full h-full border-none shadow-none'>
         <CardHeader className='flex flex-row items-center gap-x-4 p-7 space-y-0'>
@@ -245,6 +258,39 @@ export const EditWorkspaceForm = ({
       <Card className='w-full h-full border-none shadow-none'>
         <CardContent className='p-7'>
           <div className='flex flex-col'>
+            <h3 className='font-bold'>Invite members</h3>
+            <p className='text-sm text-muted-foreground'>
+              Use the invite link to add members to you workspace.
+            </p>
+            <div className='mt-4'>
+              <div className='flex items-center gap-x-2'>
+                <Input disabled value={fullInviteLink} />
+                <Button
+                  onClick={handleCopyInviteLink}
+                  variant='secondary'
+                  className='size-12'
+                >
+                  <CopyIcon className='size-5' />
+                </Button>
+              </div>
+            </div>
+
+            <Button
+              className='mt-6 w-fit ml-auto'
+              size='sm'
+              variant='destructive'
+              type='button'
+              disabled={isPending || isDeletingWorkspace}
+              onClick={handleDelete}
+            >
+              Delete Workspace
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      <Card className='w-full h-full border-none shadow-none'>
+        <CardContent className='p-7'>
+          <div className='flex flex-col'>
             <h3 className='font-bold'>Danger zone</h3>
             <p className='text-sm text-muted-foreground'>
               Deleting a workspace is irreversible and will remove all
@@ -255,7 +301,7 @@ export const EditWorkspaceForm = ({
               size='sm'
               variant='destructive'
               type='button'
-              disabled={isPending}
+              disabled={isPending || isDeletingWorkspace}
               onClick={handleDelete}
             >
               Delete Workspace
