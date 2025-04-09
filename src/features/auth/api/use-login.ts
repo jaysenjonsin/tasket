@@ -25,7 +25,7 @@ export const useLogin = () => {
       queryClient.invalidateQueries({ queryKey: ['current'] });
     },
     onError: () => {
-      toast.error('failed to log in');
+      toast.error('Failed to log in');
     },
   });
 

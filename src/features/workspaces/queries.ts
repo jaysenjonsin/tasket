@@ -64,3 +64,28 @@ export const getWorkspace = async ({ workspaceId }: GetWorkspaceProps) => {
     return null;
   }
 };
+
+interface GetWorkspaceInfoProps {
+  workspaceId: string;
+}
+//difference: You don't need to be a member of the workspace to get the workspace info. also only returns workspace name
+export const getWorkspaceInfo = async ({
+  workspaceId,
+}: GetWorkspaceInfoProps) => {
+  try {
+    const { databases } = await createSessionClient();
+
+    //type as Workspace to get type safety - otherwise it would be the generic document type from appwrite
+    const workspace = await databases.getDocument<Workspace>(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId
+    );
+
+    return {
+      name: workspace.name,
+    };
+  } catch {
+    return null;
+  }
+};
