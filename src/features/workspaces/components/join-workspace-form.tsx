@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { DottedSeperator } from '@/components/dotted-seperator';
+import { DottedSeparator } from '@/components/dotted-separator';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useJoinWorkspace } from '../api/use-join-workspace';
@@ -27,7 +27,7 @@ export const JoinWorkspaceForm = ({
   const inviteCode = useInviteCode();
   const { mutate, isPending } = useJoinWorkspace();
   const router = useRouter();
-  
+
   const onSubmit = () => {
     mutate(
       {
@@ -52,7 +52,7 @@ export const JoinWorkspaceForm = ({
         </CardDescription>
       </CardHeader>
       <div className='px-7'>
-        <DottedSeperator />
+        <DottedSeparator />
       </div>
       <CardContent className='p-7'>
         <div className='flex flex-col lg:flex-row gap-2 items-center justify-between'>

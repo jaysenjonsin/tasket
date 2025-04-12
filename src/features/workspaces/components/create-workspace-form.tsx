@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { DottedSeperator } from '@/components/dotted-seperator';
+import { DottedSeparator } from '@/components/dotted-separator';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { cn } from '../../../lib/utils';
@@ -71,7 +71,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
         </CardTitle>
       </CardHeader>
       <div className='px-7'>
-        <DottedSeperator />
+        <DottedSeparator />
       </div>
       <CardContent className='p-7'>
         <Form {...form}>
@@ -166,7 +166,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                 )}
               />
             </div>
-            <DottedSeperator className='py-7' />
+            <DottedSeparator className='py-7' />
             <div className='flex items-center justify-between'>
               {/* give type button because otherwise it will submit the form by default */}
               <Button

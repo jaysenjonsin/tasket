@@ -5,8 +5,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
-import { DottedSeperator } from '@/components/dotted-seperator';
+import { DottedSeparator } from '@/components/dotted-separator';
 import { useLogout } from '../api/use-logout';
 import { useCurrent } from '../api/use-current';
 import { Loader, LogOut } from 'lucide-react';
@@ -56,7 +57,7 @@ export const UserButton = () => {
             <p className='text-xs text-neutral-500'>{email}</p>
           </div>
         </div>
-        <DottedSeperator className='mb-1' />
+        <DottedSeparator className='mb-1' />
         <DropdownMenuItem
           onClick={() => logout()}
           className='h-10 flex items-center justify-center text-amber-700 font-medium cursor-pointer'

@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { DottedSeperator } from '@/components/dotted-seperator';
+import { DottedSeparator } from '@/components/dotted-separator';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { cn } from '../../../lib/utils';
@@ -159,7 +159,7 @@ export const EditWorkspaceForm = ({
           </CardTitle>
         </CardHeader>
         <div className='px-7'>
-          <DottedSeperator />
+          <DottedSeparator />
         </div>
         <CardContent className='p-7'>
           <Form {...form}>
@@ -259,7 +259,7 @@ export const EditWorkspaceForm = ({
                   )}
                 />
               </div>
-              <DottedSeperator className='py-7' />
+              <DottedSeparator className='py-7' />
               <div className='flex items-center justify-between'>
                 {/* give type button because otherwise it will submit the form by default */}
                 <Button
@@ -303,7 +303,7 @@ export const EditWorkspaceForm = ({
                 </Button>
               </div>
             </div>
-            <DottedSeperator className='py-7' />
+            <DottedSeparator className='py-7' />
             <Button
               className='mt-6 w-fit ml-auto'
               size='sm'
@@ -325,7 +325,7 @@ export const EditWorkspaceForm = ({
               Deleting a workspace is irreversible and will remove all
               associated data
             </p>
-            <DottedSeperator className='py-7' />
+            <DottedSeparator className='py-7' />
             <Button
               className='mt-6 w-fit ml-auto'
               size='sm'

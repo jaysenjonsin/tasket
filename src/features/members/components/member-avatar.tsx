@@ -1,18 +1,17 @@
-import Image from 'next/image';
 import { cn } from '../../../lib/utils';
 import { Avatar, AvatarFallback } from '../../../components/ui/avatar';
 
-interface MembersAvatarProps {
+interface MemberAvatarProps {
   name: string;
   className?: string;
   fallbackClassName?: string;
 }
 
-export const MembersAvatar = ({
+export const MemberAvatar = ({
   name,
   className,
   fallbackClassName,
-}: MembersAvatarProps) => {
+}: MemberAvatarProps) => {
   return (
     <Avatar
       className={cn(
@@ -26,7 +25,7 @@ export const MembersAvatar = ({
           fallbackClassName
         )}
       >
-        {name.charAt(0)}
+        {name.charAt(0).toUpperCase()}
       </AvatarFallback>
     </Avatar>
   );
