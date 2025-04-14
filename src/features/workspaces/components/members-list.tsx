@@ -3,11 +3,12 @@
 import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useConfirm } from '@/hooks/use-confirm';
 import { ArrowLeftIcon, MoreVerticalIcon } from 'lucide-react';
 import Link from 'next/link';
 import { DottedSeparator } from '@/components/dotted-separator';
-import { useGetMembers } from '../../members/api/use-get-members';
-import { MemberAvatar } from '../../members/components/member-avatar';
+import { useGetMembers } from '@/features/members/api/use-get-members';
+import { MemberAvatar } from '@/features/members/components/member-avatar';
 import { Separator } from '@/components/ui/separator';
 import {
   DropdownMenu,
@@ -15,12 +16,45 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useDeleteMember } from '@/features/members/api/use-delete-member';
+import { useUpdateMember } from '@/features/members/api/use-update-member';
+import { MemberRole } from '@/features/members/types';
 
 export const MembersList = () => {
   const workspaceId = useWorkspaceId();
+  const [ConfirmDialog, confirm] = useConfirm(
+    'Remove member',
+    'This member will be removed from the workspace',
+    'destructive'
+  );
   const { data } = useGetMembers({ workspaceId });
+  const { mutate: deleteMember, isPending: isDeletingMember } =
+    useDeleteMember();
+  const { mutate: updateMember, isPending: isUpdatingMember } =
+    useUpdateMember();
+
+  const handleUpdateMember = (memberId: string, role: MemberRole) => {
+    updateMember({
+      json: { role },
+      param: { memberId },
+    });
+  };
+
+  const handleDeleteMember = async (memberId: string) => {
+    const ok = await confirm();
+    if (!ok) return;
+    deleteMember(
+      { param: { memberId } },
+      {
+        onSuccess: () => {
+          window.location.reload();
+        },
+      }
+    );
+  };
   return (
     <Card className='w-full h-full border-none shadow-none'>
+      <ConfirmDialog />
       <CardHeader className='flex flex-row items-center gap-x-4 p-7 space-y-0'>
         <Button asChild variant='secondary' size='sm'>
           <Link href={`/workspaces/${workspaceId}`}>
@@ -55,22 +89,26 @@ export const MembersList = () => {
                 <DropdownMenuContent side='bottom' align='end'>
                   <DropdownMenuItem
                     className='font-medium'
-                    onClick={() => {}}
-                    disabled={false}
+                    onClick={() =>
+                      handleUpdateMember(member.$id, MemberRole.ADMIN)
+                    }
+                    disabled={isUpdatingMember}
                   >
                     Set as Administrator
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className='font-medium'
-                    onClick={() => {}}
-                    disabled={false}
+                    onClick={() =>
+                      handleUpdateMember(member.$id, MemberRole.MEMBER)
+                    }
+                    disabled={isUpdatingMember}
                   >
                     Set as Member
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className='font-medium text-amber-700'
-                    onClick={() => {}}
-                    disabled={false}
+                    onClick={() => handleDeleteMember(member.$id)}
+                    disabled={isDeletingMember}
                   >
                     Remove {member.name}
                   </DropdownMenuItem>
