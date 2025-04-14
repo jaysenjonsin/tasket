@@ -6,7 +6,7 @@ import { getMember } from '@/features/members/utils';
 import { IMAGES_BUCKET_ID, PROJECTS_ID } from '@/config';
 import { DATABASE_ID } from '@/config';
 import { ID, Query } from 'node-appwrite';
-import { createProjectSchema } from '../schema';
+import { createProjectSchema } from '../schemas';
 
 const app = new Hono()
   .get(
