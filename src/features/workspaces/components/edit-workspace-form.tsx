@@ -74,10 +74,8 @@ export const EditWorkspaceForm = ({
     mutate(
       { form: finalValues, param: { workspaceId: initialValues.$id } },
       {
-        onSuccess: ({ data }) => {
+        onSuccess: () => {
           form.reset();
-          //after the workspace is created, redirect to the workspace immediately
-          router.push(`/workspaces/${data.$id}`);
         },
       }
     );
@@ -107,17 +105,9 @@ export const EditWorkspaceForm = ({
     const ok = await confirmReset();
     if (!ok) return;
 
-    resetInviteCode(
-      {
-        param: { workspaceId: initialValues.$id },
-      },
-      {
-        onSuccess: () => {
-          //use router refresh because initial data from edit-workspace-form is through a server component
-          router.refresh();
-        },
-      }
-    );
+    resetInviteCode({
+      param: { workspaceId: initialValues.$id },
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
