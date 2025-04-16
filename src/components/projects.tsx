@@ -9,7 +9,6 @@ import { cn } from '../lib/utils';
 import { useCreateProjectModal } from '@/features/projects/hooks/use-create-project-modal';
 import { ProjectAvatar } from '@/features/projects/components/project-avatar';
 export const Projects = () => {
-  const projectId = null;
   const { open } = useCreateProjectModal();
   const workspaceId = useWorkspaceId();
   const { data } = useGetProjects({

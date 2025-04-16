@@ -62,6 +62,7 @@ const app = new Hono()
 
       let uploadedImageUrl: string | undefined;
 
+      //upload the image to the storage bucket
       if (image instanceof File) {
         const file = await storage.createFile(
           IMAGES_BUCKET_ID,
@@ -69,13 +70,13 @@ const app = new Hono()
           image
         );
 
-        //images are binary data, ArrayBuffer is a representation of binary data that can be handled in JS
+        //here we get preview of the image. images are binary data, ArrayBuffer is a representation of binary data that can be handled in JS
         const arrayBuffer = await storage.getFilePreview(
           IMAGES_BUCKET_ID,
           file.$id
         );
 
-        //convert the arrayBuffer to a base64 string
+        //convert the arrayBuffer to a base64 string. now we can use this string to display the image in the UI.
         uploadedImageUrl = `data:image/png;base64,${Buffer.from(
           arrayBuffer
         ).toString('base64')}`;
