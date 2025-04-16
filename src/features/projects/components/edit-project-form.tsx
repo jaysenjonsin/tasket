@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useUpdateProject } from '../api/use-update-project';
+import { useDeleteProject } from '../api/use-delete-project';
 import {
   Form,
   FormControl,
@@ -36,11 +37,11 @@ export const EditProjectForm = ({
 }: EditProjectFormProps) => {
   const router = useRouter();
   const { mutate, isPending } = useUpdateProject();
-  // const { mutate: deleteProject, isPending: isDeletingProject } =
-  //   useDeleteProject();
+  const { mutate: deleteProject, isPending: isDeletingProject } =
+    useDeleteProject();
 
   const [DeleteDiaolog, confirmDelete] = useConfirm(
-    'Delete Workspace',
+    'Delete Project',
     'This action cannot be undone',
     'destructive'
   );
@@ -75,18 +76,16 @@ export const EditProjectForm = ({
     const ok = await confirmDelete();
     if (!ok) return;
 
-    // deleteWorkspace(
-    //   {
-    //     param: { workspaceId: initialValues.$id },
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       // router.push('/');
-    //       //hard reload to page
-    //       window.location.href = '/';
-    //     },
-    //   }
-    // );
+    deleteProject(
+      {
+        param: { projectId: initialValues.$id },
+      },
+      {
+        onSuccess: () => {
+          window.location.href = `/workspaces/${initialValues.workspaceId}`;
+        },
+      }
+    );
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,7 +107,10 @@ export const EditProjectForm = ({
             onClick={
               onCancel
                 ? onCancel
-                : () => router.push(`/workspaces/${initialValues.$id}`)
+                : () =>
+                    router.push(
+                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}`
+                    )
             }
           >
             <ArrowLeftIcon className='size-4 mr-2' />
@@ -229,7 +231,7 @@ export const EditProjectForm = ({
                   Cancel
                 </Button>
                 <Button
-                  // type='submit' <-- default submit so its unnecessary to specify
+                  // type='submit' <-- default submit so its unnecessary to specifywh
                   size='lg'
                   disabled={isPending}
                 >
@@ -255,7 +257,7 @@ export const EditProjectForm = ({
               size='sm'
               variant='destructive'
               type='button'
-              disabled={isPending}
+              disabled={isDeletingProject}
               onClick={handleDelete}
             >
               Delete Project
