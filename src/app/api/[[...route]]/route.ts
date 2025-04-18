@@ -6,13 +6,15 @@ import auth from '@/features/auth/server/route';
 import workspaces from '@/features/workspaces/server/route';
 import members from '@/features/members/server/route';
 import projects from '@/features/projects/server/route';
+import tasks from '@/features/tasks/server/route';
 const app = new Hono().basePath('/api');
 
 const routes = app
   .route('/auth', auth)
   .route('/workspaces', workspaces)
   .route('/members', members)
-  .route('/projects', projects);
+  .route('/projects', projects)
+  .route('/tasks', tasks);
 
 export const GET = handle(app); //handle adapts the hono app to work with vercel edge runtime, makes sure all routing and middleware work correctly. hono and vercel have diff ways of handling HTTP requests and handle bridges the gap
 export const POST = handle(app);

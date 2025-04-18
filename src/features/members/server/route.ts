@@ -30,6 +30,7 @@ const app = new Hono()
         Query.equal('workspaceId', workspaceId),
       ]);
 
+      //populate the members with the user name and email because this information is not stored in the members collection
       const populatedMembers = await Promise.all(
         members.documents.map(async (member) => {
           const user = await users.get(member.userId);
@@ -43,6 +44,7 @@ const app = new Hono()
       return c.json({
         data: {
           ...members,
+          //override the original documents with the populated documents
           documents: populatedMembers,
         },
       });

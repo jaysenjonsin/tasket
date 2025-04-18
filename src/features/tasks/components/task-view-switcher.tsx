@@ -1,4 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { PlusIcon } from 'lucide-react';
+import { DottedSeparator } from '@/components/dotted-separator';
 export const TaskViewSwitcher = () => {
   return (
     <Tabs className='flex-1 w-full border rounded-lg'>
@@ -15,7 +18,26 @@ export const TaskViewSwitcher = () => {
               Calendar
             </TabsTrigger>
           </TabsList>
+
+          <Button size='sm' className='w-full lg:w-auto'>
+            <PlusIcon className='size-4 mr-2' />
+            New
+          </Button>
         </div>
+        <DottedSeparator className='my-4' />
+        Data filters
+        <DottedSeparator className='my-4' />
+        <>
+          <TabsContent value='table' className='mt-0'>
+            Data table
+          </TabsContent>
+          <TabsContent value='kanban' className='mt-0'>
+            kanban
+          </TabsContent>
+          <TabsContent value='calendar' className='mt-0'>
+            calendar
+          </TabsContent>
+        </>
       </div>
     </Tabs>
   );
