@@ -84,10 +84,22 @@ const app = new Hono()
         projectIds.length > 0 ? [Query.contains('$id', projectIds)] : []
       );
 
-      const assignees = await databases.listDocuments(
+      const members = await databases.listDocuments(
         DATABASE_ID,
         MEMBERS_ID,
         assigneeIds.length > 0 ? [Query.contains('$id', assigneeIds)] : []
+      );
+
+      //populate the members with the user name and email
+      const assignees = await Promise.all(
+        members.documents.map(async (member) => {
+          const user = await users.get(member.userId);
+          return {
+            ...member,
+            name: user.name,
+            email: user.email,
+          };
+        })
       );
 
       //populate the tasks with the project and assignee
@@ -95,7 +107,7 @@ const app = new Hono()
         const project = projects.documents.find(
           (project) => project.$id === task.projectId
         );
-        const assignee = assignees.documents.find(
+        const assignee = assignees.find(
           (assigneer) => assigneer.$id === task.assigneeId
         );
         return {
