@@ -84,12 +84,11 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
                 name='name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder='Enter project name' />
-                      </FormControl>
-                      <FormMessage />
-                    </FormLabel>
+                    <FormLabel>Project Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder='Enter project name' />
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
