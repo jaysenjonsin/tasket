@@ -1,6 +1,6 @@
 import { zValidator } from '@hono/zod-validator';
 import { sessionMiddleware } from '../../../lib/session-middleware';
-import { createTaskScehma } from '../schemas';
+import { createTaskSchema } from '../schemas';
 import { Hono } from 'hono';
 import { getMember } from '@/features/members/utils';
 import {
@@ -128,7 +128,7 @@ const app = new Hono()
   .post(
     '/',
     sessionMiddleware,
-    zValidator('json', createTaskScehma),
+    zValidator('json', createTaskSchema),
     async (c) => {
       const user = c.get('user');
       const databases = c.get('databases');
