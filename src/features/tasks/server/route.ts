@@ -61,8 +61,8 @@ const app = new Hono()
         query.push(Query.equal('status', status));
       }
       if (assigneeId) {
-        console.log('assigneId', assigneeId);
-        query.push(Query.equal('assigneId', assigneeId));
+        console.log('assigneeId', assigneeId);
+        query.push(Query.equal('assigneeId', assigneeId));
       }
       if (dueDate) {
         console.log('dueDate', dueDate);
