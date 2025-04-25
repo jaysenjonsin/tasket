@@ -2,13 +2,14 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Task } from '../types';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProjectAvatar } from '../../projects/components/project-avatar';
 import { MemberAvatar } from '../../members/components/member-avatar';
 import { TaskDate } from './task-date';
 import { snakeCaseToTitleCase } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { TaskActions } from './task-actions';
 export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'name',
@@ -121,6 +122,20 @@ export const columns: ColumnDef<Task>[] = [
       const status = row.original.status;
 
       return <Badge variant={status}>{snakeCaseToTitleCase(status)}</Badge>;
+    },
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const id = row.original.$id;
+      const projectId = row.original.projectId;
+      return (
+        <TaskActions id={id} projectId={projectId}>
+          <Button variant='ghost' className='size-8'>
+            <MoreVertical className='size-4' />
+          </Button>
+        </TaskActions>
+      );
     },
   },
 ];
