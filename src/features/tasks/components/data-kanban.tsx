@@ -50,6 +50,97 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
     return initialTasks;
   });
 
+  const onDragEnd = useCallback((result: DropResult) => {
+    if (!result.destination) return;
+
+    const { source, destination } = result;
+
+    const sourceStatus = source.droppableId as TaskStatus;
+    const destStatus = destination.droppableId as TaskStatus;
+
+    let updatesPayload: {
+      $id: string;
+      status: TaskStatus;
+      position: number;
+    }[] = [];
+
+    setTasks((prevTasks) => {
+      const newTasks = { ...prevTasks };
+
+      //remove task from source column
+      const sourceColumn = [...newTasks[sourceStatus]];
+      const [movedTask] = sourceColumn.splice(source.index, 1);
+
+      //if no moved task, return previous (this should never happen)
+      if (!movedTask) {
+        console.error('no task found at source index');
+        return prevTasks;
+      }
+
+      //create new task w/ potentially updated status
+      const updatedMovedTask =
+        //did we change status or are we just moving it up/down in the same column
+        sourceStatus !== destStatus
+          ? { ...movedTask, status: destStatus } //update status
+          : movedTask; //keeps same status just reordered in the same column
+
+      //update source column
+      //ex. if we moved task from TODO to IN_PROGRESS, we need to update the task in TODO
+      newTasks[sourceStatus] = sourceColumn;
+
+      //add task to destination column
+      //ex. if we moved task from TODO to IN_PROGRESS, we need to add the task to IN_PROGRESS
+      const destColumn = [...newTasks[destStatus]];
+      destColumn.splice(destination.index, 0, updatedMovedTask);
+      newTasks[destStatus] = destColumn;
+
+      //prepare minimal update payloads
+      updatesPayload = [];
+
+      //update the moved task
+      //ex. if we moved task from TODO to IN_PROGRESS, we need to update the task in IN_PROGRESS
+      updatesPayload.push({
+        $id: movedTask.$id,
+        status: destStatus,
+        position: Math.min((destination.index + 1) * 1000, 1000000),
+      });
+
+      //update positions for affected tasks in the destination column
+      //ex. if we moved task from TODO to IN_PROGRESS, we need to update positions of all tasks in IN_PROGRESS
+      newTasks[destStatus].forEach((task, index) => {
+        if (task && task.$id !== updatedMovedTask.$id) {
+          const newPosition = Math.min((index + 1) * 1000, 1000000);
+          if (task.position !== newPosition) {
+            updatesPayload.push({
+              $id: task.$id,
+              status: destStatus,
+              position: newPosition,
+            });
+          }
+        }
+      });
+
+      //if task moved between columns, update positions in the source column
+      //ex. if we moved task from TODO to IN_PROGRESS, we need to update positions of all tasks in TODO
+      if (sourceStatus !== destStatus) {
+        newTasks[sourceStatus].forEach((task, index) => {
+          if (task && task.$id !== updatedMovedTask.$id) {
+            const newPosition = Math.min((index + 1) * 1000, 1000000);
+            if (task.position !== newPosition) {
+              updatesPayload.push({
+                $id: task.$id,
+                status: sourceStatus,
+                position: newPosition,
+              });
+            }
+          }
+        });
+      }
+
+      return newTasks;
+    });
+  }, []);
+
   return (
     <DragDropContext onDragEnd={() => {}}>
       <div className='flex overflow-x-auto'>
@@ -88,6 +179,8 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
                         )}
                       </Draggable>
                     ))}
+                    {/* This is a placeholder for the draggable items */}
+                    {provided.placeholder}
                   </div>
                 )}
               </Droppable>

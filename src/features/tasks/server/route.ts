@@ -192,6 +192,7 @@ const app = new Hono()
         ]
       );
       //if there are no tasks, set the position to 1000, otherwise set the position to the highest position + 1000
+      //use 1000 as the increment instead of 1 to avoid position conflicts (use large increments space between positional values, allowing items to be inserted or moved between existing items efficiently by calculating midpoints. ex. if u had position 1,2,3,4 and you inserted a new task between 2 and 3, the new task would be position 2.5, and the next task would be 3.5. decimals = complicated, other solution would be to renumber subsequent items like updating 2 to 3 then 3 to 2 etc. but that requires multiple db updates)
       const newPosition =
         highestPositionTask.documents.length > 0
           ? highestPositionTask.documents[0].position + 1000
