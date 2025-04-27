@@ -23,9 +23,12 @@ type TasksState = {
 
 interface DataKanbanProps {
   data: Task[];
+  onChange: (
+    tasks: { $id: string; status: TaskStatus; position: number }[]
+  ) => void;
 }
 
-export const DataKanban = ({ data }: DataKanbanProps) => {
+export const DataKanban = ({ data, onChange }: DataKanbanProps) => {
   const [tasks, setTasks] = useState<TasksState>(() => {
     const initialTasks: TasksState = {
       [TaskStatus.BACKLOG]: [],
@@ -50,99 +53,130 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
     return initialTasks;
   });
 
-  const onDragEnd = useCallback((result: DropResult) => {
-    if (!result.destination) return;
+  //update tasks state when data prop changes
+  useEffect(() => {
+    const newTasks: TasksState = {
+      [TaskStatus.BACKLOG]: [],
+      [TaskStatus.TODO]: [],
+      [TaskStatus.IN_PROGRESS]: [],
+      [TaskStatus.IN_REVIEW]: [],
+      [TaskStatus.DONE]: [],
+    };
 
-    const { source, destination } = result;
+    data.forEach((task) => {
+      newTasks[task.status].push(task);
+    });
 
-    const sourceStatus = source.droppableId as TaskStatus;
-    const destStatus = destination.droppableId as TaskStatus;
+    Object.keys(newTasks).forEach((status) => {
+      newTasks[status as TaskStatus].sort(
+        (a, b) => a.position - b.position
+      );
+    });
 
-    let updatesPayload: {
-      $id: string;
-      status: TaskStatus;
-      position: number;
-    }[] = [];
+    setTasks(newTasks);
+  }, [data]);
 
-    setTasks((prevTasks) => {
-      const newTasks = { ...prevTasks };
+  const onDragEnd = useCallback(
+    (result: DropResult) => {
+      if (!result.destination) return;
 
-      //remove task from source column
-      const sourceColumn = [...newTasks[sourceStatus]];
-      const [movedTask] = sourceColumn.splice(source.index, 1);
+      const { source, destination } = result;
 
-      //if no moved task, return previous (this should never happen)
-      if (!movedTask) {
-        console.error('no task found at source index');
-        return prevTasks;
-      }
+      const sourceStatus = source.droppableId as TaskStatus;
+      const destStatus = destination.droppableId as TaskStatus;
 
-      //create new task w/ potentially updated status
-      const updatedMovedTask =
-        //did we change status or are we just moving it up/down in the same column
-        sourceStatus !== destStatus
-          ? { ...movedTask, status: destStatus } //update status
-          : movedTask; //keeps same status just reordered in the same column
+      let updatesPayload: {
+        $id: string;
+        status: TaskStatus;
+        position: number;
+      }[] = [];
 
-      //update source column
-      //ex. if we moved task from TODO to IN_PROGRESS, we need to update the task in TODO
-      newTasks[sourceStatus] = sourceColumn;
+      setTasks((prevTasks) => {
+        const newTasks = { ...prevTasks };
 
-      //add task to destination column
-      //ex. if we moved task from TODO to IN_PROGRESS, we need to add the task to IN_PROGRESS
-      const destColumn = [...newTasks[destStatus]];
-      destColumn.splice(destination.index, 0, updatedMovedTask);
-      newTasks[destStatus] = destColumn;
+        //remove task from source column
+        //ex. if we moved task from TODO to IN_PROGRESS, we need to remove the task from TODO
+        const sourceColumn = [...newTasks[sourceStatus]];
+        //assign the moved task to movedTask variable
+        const [movedTask] = sourceColumn.splice(source.index, 1);
 
-      //prepare minimal update payloads
-      updatesPayload = [];
-
-      //update the moved task
-      //ex. if we moved task from TODO to IN_PROGRESS, we need to update the task in IN_PROGRESS
-      updatesPayload.push({
-        $id: movedTask.$id,
-        status: destStatus,
-        position: Math.min((destination.index + 1) * 1000, 1000000),
-      });
-
-      //update positions for affected tasks in the destination column
-      //ex. if we moved task from TODO to IN_PROGRESS, we need to update positions of all tasks in IN_PROGRESS
-      newTasks[destStatus].forEach((task, index) => {
-        if (task && task.$id !== updatedMovedTask.$id) {
-          const newPosition = Math.min((index + 1) * 1000, 1000000);
-          if (task.position !== newPosition) {
-            updatesPayload.push({
-              $id: task.$id,
-              status: destStatus,
-              position: newPosition,
-            });
-          }
+        //if no moved task, return previous (this should never happen)
+        if (!movedTask) {
+          console.error('no task found at source index');
+          return prevTasks;
         }
-      });
 
-      //if task moved between columns, update positions in the source column
-      //ex. if we moved task from TODO to IN_PROGRESS, we need to update positions of all tasks in TODO
-      if (sourceStatus !== destStatus) {
-        newTasks[sourceStatus].forEach((task, index) => {
+        //create new task w/ potentially updated status
+        const updatedMovedTask =
+          //did we change status or are we just moving it up/down in the same column
+          sourceStatus !== destStatus
+            ? { ...movedTask, status: destStatus } //update status
+            : movedTask; //keeps same status just reordered in the same column
+
+        //update source column
+        //ex. if we moved task from TODO to IN_PROGRESS, we need to update the task in TODO ensuring the task is visually removed from the source column
+        newTasks[sourceStatus] = sourceColumn;
+
+        //add task to destination column
+        //ex. if we moved task from TODO to IN_PROGRESS, we need to add the task to IN_PROGRESS
+        const destColumn = [...newTasks[destStatus]];
+        destColumn.splice(destination.index, 0, updatedMovedTask);
+        newTasks[destStatus] = destColumn;
+
+        //prepare minimal update payloads
+        updatesPayload = [];
+
+        //update the moved task
+        //ex. if we moved task from TODO to IN_PROGRESS, we need to update the task in IN_PROGRESS
+        updatesPayload.push({
+          $id: movedTask.$id,
+          status: destStatus,
+          position: Math.min((destination.index + 1) * 1000, 1000000),
+        });
+
+        //update positions for affected tasks in the destination column
+        //ex. if we moved task from TODO to IN_PROGRESS, we need to update positions of all tasks in IN_PROGRESS
+        newTasks[destStatus].forEach((task, index) => {
           if (task && task.$id !== updatedMovedTask.$id) {
             const newPosition = Math.min((index + 1) * 1000, 1000000);
             if (task.position !== newPosition) {
               updatesPayload.push({
                 $id: task.$id,
-                status: sourceStatus,
+                status: destStatus,
                 position: newPosition,
               });
             }
           }
         });
-      }
 
-      return newTasks;
-    });
-  }, []);
+        //if task moved between columns, update positions in the source column
+        //ex. if we moved task from TODO to IN_PROGRESS, we need to update positions of all tasks in TODO
+        if (sourceStatus !== destStatus) {
+          newTasks[sourceStatus].forEach((task, index) => {
+            if (task && task.$id !== updatedMovedTask.$id) {
+              const newPosition = Math.min((index + 1) * 1000, 1000000);
+              if (task.position !== newPosition) {
+                updatesPayload.push({
+                  $id: task.$id,
+                  status: sourceStatus,
+                  position: newPosition,
+                });
+              }
+            }
+          });
+        }
+
+        return newTasks;
+      });
+
+      //update the task statuses in the database
+      onChange(updatesPayload);
+    },
+    [onChange]
+  );
 
   return (
-    <DragDropContext onDragEnd={() => {}}>
+    <DragDropContext onDragEnd={onDragEnd}>
       <div className='flex overflow-x-auto'>
         {boards.map((board) => {
           return (
