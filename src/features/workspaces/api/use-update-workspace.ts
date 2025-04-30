@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { InferRequestType, InferResponseType } from 'hono';
 import { client } from '@/lib/rpc';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 //200: explicitly type response type as a success response. we already handle errors within the mutationFn
 type ResponseType = InferResponseType<
   (typeof client.api.workspaces)[':workspaceId']['$patch'],
@@ -14,7 +13,6 @@ type RequestType = InferRequestType<
 
 export const useUpdateWorkspace = () => {
   const queryClient = useQueryClient();
-  const router = useRouter();
   //useMutation creates an object that contains things like mutate, isPending, isError, isSuccess, etc.
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ form, param }) => {
@@ -28,7 +26,6 @@ export const useUpdateWorkspace = () => {
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      router.refresh();
       toast.success('Workspace Updated');
       queryClient.invalidateQueries({ queryKey: ['workspaces'] });
       queryClient.invalidateQueries({ queryKey: ['workspace', data.$id] });
