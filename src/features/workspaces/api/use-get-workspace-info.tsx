@@ -4,7 +4,9 @@ import { client } from '@/lib/rpc';
 interface UseGetWorkspaceInfoProps {
   workspaceId: string;
 }
-export const useGetWorkspace = ({ workspaceId }: UseGetWorkspaceInfoProps) => {
+export const useGetWorkspaceInfo = ({
+  workspaceId,
+}: UseGetWorkspaceInfoProps) => {
   const query = useQuery({
     queryKey: ['workspace-info', workspaceId],
     queryFn: async () => {

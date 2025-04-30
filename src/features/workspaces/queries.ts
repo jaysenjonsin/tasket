@@ -31,48 +31,7 @@ export const getWorkspaces = async () => {
   //       $updatedAt: '2021-01-01',
 };
 
-interface GetWorkspaceProps {
-  workspaceId: string;
-}
-export const getWorkspace = async ({ workspaceId }: GetWorkspaceProps) => {
-  const { databases, account } = await createSessionClient();
-  const user = await account.get();
 
-  //check if the user is a member of the workspace
-  const member = await getMember({
-    databases,
-    userId: user.$id,
-    workspaceId,
-  });
-  if (!member) throw new Error ('Unauthorized')
 
-  //type as Workspace to get type safety - otherwise it would be the generic document type from appwrite
-  const workspace = await databases.getDocument<Workspace>(
-    DATABASE_ID,
-    WORKSPACES_ID,
-    workspaceId
-  );
 
-  return workspace;
-};
 
-interface GetWorkspaceInfoProps {
-  workspaceId: string;
-}
-//difference: You don't need to be a member of the workspace to get the workspace info. also only returns workspace name
-export const getWorkspaceInfo = async ({
-  workspaceId,
-}: GetWorkspaceInfoProps) => {
-  const { databases } = await createSessionClient();
-
-  //type as Workspace to get type safety - otherwise it would be the generic document type from appwrite
-  const workspace = await databases.getDocument<Workspace>(
-    DATABASE_ID,
-    WORKSPACES_ID,
-    workspaceId
-  );
-
-  return {
-    name: workspace.name,
-  };
-};
