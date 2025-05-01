@@ -47,7 +47,7 @@ export function TaskActions({ id, projectId, children }: TaskActionsProps) {
     <div className='flex justify-end'>
       <ConfirmDialog />
       <DropdownMenu modal={false}>
-        {/* asChild because columns.tsx has the button component to trigger the dropdown menu */}
+        {/* asChild because columns.tsx/whever TaskActions is rendered has the button component to trigger the dropdown menu */}
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-48'>
           <DropdownMenuItem
