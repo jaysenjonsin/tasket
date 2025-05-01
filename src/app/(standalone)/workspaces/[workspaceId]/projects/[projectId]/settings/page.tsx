@@ -1,4 +1,3 @@
-import { getProject } from '@/features/projects/queries';
 import { getCurrent } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
 import { ProjectIdSettingClient } from './client';

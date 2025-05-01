@@ -19,6 +19,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { loginSchema } from '../schemas';
 import { useLogin } from '../api/use-login';
+import { signUpWithGithub, signUpWithGoogle } from '@/lib/oauth';
 
 export const SignInCard = () => {
   const { mutate, isPending } = useLogin();
@@ -90,15 +91,17 @@ export const SignInCard = () => {
       </div>
       <CardContent className='p-7 flex flex-col gap-y-4'>
         <Button
+          onClick={() => signUpWithGoogle()}
           variant='secondary'
           size='lg'
           disabled={isPending}
           className='w-full'
         >
           <FcGoogle className='size-5 mr-2' />
-          Login with google
+          Login with Google
         </Button>
         <Button
+          onClick={() => signUpWithGithub()}
           variant='secondary'
           size='lg'
           disabled={isPending}

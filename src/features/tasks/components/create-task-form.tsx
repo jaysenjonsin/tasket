@@ -48,6 +48,7 @@ export const CreateTaskForm = ({
   const router = useRouter();
 
   const form = useForm<z.infer<typeof createTaskSchema>>({
+    //@ts-ignore
     resolver: zodResolver(createTaskSchema.omit({ workspaceId: true })),
     defaultValues: {
       workspaceId,

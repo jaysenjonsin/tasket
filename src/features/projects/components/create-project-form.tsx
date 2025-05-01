@@ -35,6 +35,7 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof createProjectSchema>>({
+    //@ts-ignore
     resolver: zodResolver(createProjectSchema.omit({ workspaceId: true })),
     defaultValues: {
       name: '',
