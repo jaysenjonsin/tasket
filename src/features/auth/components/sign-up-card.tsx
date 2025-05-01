@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import Link from 'next/link';
+import { signUpWithGithub, signUpWithGoogle } from '@/lib/oauth';
 import {
   Form,
   FormControl,
@@ -121,15 +122,17 @@ export const SignUpCard = () => {
       </div>
       <CardContent className='p-7 flex flex-col gap-y-4'>
         <Button
+          onClick={() => signUpWithGoogle()}
           variant='secondary'
           size='lg'
           disabled={isPending}
           className='w-full'
         >
           <FcGoogle className='size-5 mr-2' />
-          Login with google
+          Login with Google
         </Button>
         <Button
+          onClick={() => signUpWithGithub()}
           variant='secondary'
           size='lg'
           disabled={isPending}
