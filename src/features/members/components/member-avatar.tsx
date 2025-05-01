@@ -1,5 +1,5 @@
-import { cn } from '../../../lib/utils';
-import { Avatar, AvatarFallback } from '../../../components/ui/avatar';
+import { cn } from '@/lib/utils';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 interface MemberAvatarProps {
   name: string;

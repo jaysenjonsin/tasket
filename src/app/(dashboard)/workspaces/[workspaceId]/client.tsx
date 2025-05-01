@@ -17,6 +17,10 @@ import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { CalendarIcon, PlusIcon, SettingsIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Project } from '@/features/projects/types';
+import { ProjectAvatar } from '@/features/projects/components/project-avatar';
+import { Member } from '@/features/members/types';
+import { MemberAvatar } from '@/features/members/components/member-avatar';
 
 export const WorkspaceIdClient = () => {
   const workspaceId = useWorkspaceId();
@@ -31,8 +35,6 @@ export const WorkspaceIdClient = () => {
   const { data: members, isLoading: isLoadingMembers } = useGetMembers({
     workspaceId,
   });
-
-  const { open: createProject } = useCreateProjectModal();
 
   const isLoading =
     isLoadingAnalytics ||
@@ -50,6 +52,8 @@ export const WorkspaceIdClient = () => {
       <Analytics data={analytics} />
       <div className='grid grid-cols-1 xl:grid-cols-2 gap-4'>
         <TaskList data={tasks.documents} total={tasks.total} />
+        <ProjectList data={projects.documents} total={projects.total} />
+        <MembersList data={members.documents} total={members.total} />
       </div>
     </div>
   );
@@ -95,13 +99,106 @@ export const TaskList = ({ data, total }: TaskListProps) => {
             </li>
           ))}
           {/* only visible if it is the first in array AKA if there are no tasks */}
-          < li className='text-sm text-muted-foreground text-center hidden first-of-type:block'>
+          <li className='text-sm text-muted-foreground text-center hidden first-of-type:block'>
             No tasks found
           </li>
         </ul>
         <Button variant='muted' className='mt-4 w-full' asChild>
           <Link href={`/workspaces/${workspaceId}/tasks`}>Show all</Link>
         </Button>
+      </div>
+    </div>
+  );
+};
+
+interface ProjectListProps {
+  data: Project[];
+  total: number;
+}
+export const ProjectList = ({ data, total }: ProjectListProps) => {
+  const { open: createProject } = useCreateProjectModal();
+  const workspaceId = useWorkspaceId();
+  return (
+    <div className='flex flex-col gap-y-4 col-span-1'>
+      <div className='bg-white border rounded-lg p-4'>
+        <div className='flex items-center justify-between'>
+          <p className='text-lg font-semibold'>Projects ({total})</p>
+          <Button variant='secondary' size='icon' onClick={createProject}>
+            <PlusIcon className='size-4 text-neutral-400' />
+          </Button>
+        </div>
+        <DottedSeparator className='my-4' />
+        <ul className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
+          {data.map((project) => (
+            <li key={project.id}>
+              <Link href={`/workspaces/${workspaceId}/projects/${project.id}`}>
+                <Card className='shadow-none rounded-lg hover:opacity-75 transition'>
+                  <CardContent className='p-4 flex items-center gap-x-2.5'>
+                    <ProjectAvatar
+                      name={project.name}
+                      className='size-12'
+                      fallbackClassName='text-lg'
+                      image={project.imageUrl}
+                    />
+                    <p className='text-lg font-medium truncate'>
+                      {project.name}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            </li>
+          ))}
+          {/* only visible if it is the first in array AKA if there are no projects */}
+          <li className='text-sm text-muted-foreground text-center hidden first-of-type:block'>
+            No projects found
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+interface MembersListProps {
+  data: Member[];
+  total: number;
+}
+export const MembersList = ({ data, total }: MembersListProps) => {
+  const workspaceId = useWorkspaceId();
+  return (
+    <div className='flex flex-col gap-y-4 col-span-1'>
+      <div className='bg-white border rounded-lg p-4'>
+        <div className='flex items-center justify-between'>
+          <p className='text-lg font-semibold'>Memberss ({total})</p>
+          <Button variant='secondary' size='icon' asChild>
+            <Link href={`/workspaces/${workspaceId}/members`}>
+              <SettingsIcon className='size-4 text-neutral-400' />
+            </Link>
+          </Button>
+        </div>
+        <DottedSeparator className='my-4' />
+        <ul className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+          {data.map((member) => (
+            <li key={member.id}>
+              <Card className='shadow-none rounded-lg overflow-hidden'>
+                <CardContent className='p-3 flex flex-col items-center gap-x-2'>
+                  <MemberAvatar name={member.name} className='size-12' />
+                  <div className='flex flex-col items-center overflow-hidden'>
+                    <p className='text-lg font-medium line-clamp-1'>
+                      {member.name}
+                    </p>
+                    <p className='text-sm text-muted-foreground line-clamp-1'>
+                      {member.email}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </li>
+          ))}
+          {/* only visible if it is the first in array AKA if there are no members */}
+          <li className='text-sm text-muted-foreground text-center hidden first-of-type:block'>
+            No members found
+          </li>
+        </ul>
       </div>
     </div>
   );
