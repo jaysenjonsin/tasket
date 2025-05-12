@@ -41,7 +41,14 @@ export const DatePicker = ({
           {value ? format(value, 'PPP') : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-auto p-0'>
+      <PopoverContent
+        className='w-auto p-0'
+        // align='start'
+        side='bottom'
+        // sideOffset={8}
+        // alignOffset={0}
+        // avoidCollisions={false}
+      >
         <Calendar
           mode='single'
           selected={value}
